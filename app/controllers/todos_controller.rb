@@ -28,6 +28,9 @@ class TodosController < ApplicationController
         format.turbo_stream
         format.html { redirect_to todo_url(@todo), notice: "Todo was successfully created." }
       else
+        format.turbo_stream { 
+          render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@todo)}_form", partial: "form", locals: { todo: @todo })
+        }
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -40,6 +43,9 @@ class TodosController < ApplicationController
         format.html { redirect_to todo_url(@todo), notice: "Todo was successfully updated." }
         format.json { render :show, status: :ok, location: @todo }
       else
+        format.turbo_stream {
+          render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@todo)}_form", partial: "form", locals: { todo: @todo })
+        }
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @todo.errors, status: :unprocessable_entity }
       end
